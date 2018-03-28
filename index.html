@@ -1,0 +1,39 @@
+<html>
+
+<script type="text/javascript" src="GUI.js"></script>
+
+<head>
+    <title>Square Game</title>
+    <style>
+
+    body, html{     
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;  
+    }
+
+    </style>
+</head>
+
+<script>
+init = function() {
+    
+    var gui = GUI(document.getElementById("container"));
+    
+    // set up the main loop
+    setInterval(update, 1000 / 60);
+    function update() {
+        gui.update();
+    }
+}
+</script>
+
+<body onload="init()">
+
+<canvas id="canvas-game" width="800" height="600"></canvas>
+
+</body>
+</html>
