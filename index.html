@@ -3,7 +3,7 @@
 <script type="text/javascript" src="GUI.js"></script>
 
 <head>
-    <title>Square Game</title>
+    <title>Sliding Puzzle</title>
     <style>
 
     body, html{     
@@ -21,13 +21,8 @@
 <script>
 init = function() {
     
-    var gui = GUI(document.getElementById("container"));
+    var gui = GUI();
     
-    // set up the main loop
-    setInterval(update, 1000 / 60);
-    function update() {
-        gui.update();
-    }
 }
 </script>
 

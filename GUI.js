@@ -1,7 +1,6 @@
-GUI = function (container) {
+GUI = function () {
 
     var self = {};
-    self.container = container;
 
     self.ctx = document.getElementById("canvas-game").getContext("2d"); 
     self.ctx.font = '14px Arial';
@@ -9,14 +8,30 @@ GUI = function (container) {
     self.n = 5;
     self.position = [];
 
-    let i = 0;
-    for (let y=0; y<self.n; y++) {
-        let row = [];
-        for (let x=0; x<self.n; x++) {
-            row.push(i);
-            i++;
+    self.start = function() {
+
+        let order = [];
+        for (let j=self.n*self.n - 1; j>=0; j--) {
+            order.push(j);
         }
-        self.position.push(row);
+
+        order = self.shuffle(order);
+
+        let i = 0;
+        for (let y=0; y<self.n; y++) {
+            let row = [];
+            for (let x=0; x<self.n; x++) {
+                row.push(order[i]);
+                i++;
+            }
+            self.position.push(row);
+        }
+
+        self.update();
+    }
+
+    self.shuffle = function(a) {
+        return a;
     }
 
     self.getMousePos = function (canvas, evt) {
@@ -33,12 +48,12 @@ GUI = function (container) {
     self.draw = function () {
 
         // clear the foreground to white
-        self.ctx.clearRect(0, 0, 600, 800);
+        self.ctx.clearRect(0, 0, self.n*100 + self.n, self.n*100+self.n);
         
         self.ctx.fillStyle = "lightgray";
         //self.ctx.strokeStyle = "black";
         self.ctx.beginPath();
-        self.ctx.rect(0, 0, 303, 303);
+        self.ctx.rect(0, 0, self.n*100 + self.n, self.n*100+self.n);
         self.ctx.fill();
         //self.ctx.lineWidth = 0;
         //self.ctx.stroke();
@@ -67,5 +82,10 @@ GUI = function (container) {
 
     }
 
+    self.start();
+
     return self;
 }
+
+
+
