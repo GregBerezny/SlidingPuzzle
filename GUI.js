@@ -6,38 +6,106 @@ GUI = function () {
     self.ctx.font = '14px Arial';
 
     self.n = 5;
-    self.position = [];
+    self.board = [];
+
+    self.onClick = function(e) {
+        let x = Math.floor(e.clientX / 100);
+        let y = Math.floor(e.clientY / 100);
+        self.moveTile(self.getValue(x, y));
+    }
+
+    document.getElementById("canvas-game").addEventListener("click", self.onClick, false);
 
     self.start = function() {
 
-        let order = [];
+        let positions = [];
         for (let j=self.n*self.n - 1; j>=0; j--) {
-            order.push(j);
+            positions.push(j);
         }
 
-        order = self.shuffle(order);
+        positions = self.shuffle(positions);
 
         let i = 0;
         for (let y=0; y<self.n; y++) {
             let row = [];
             for (let x=0; x<self.n; x++) {
-                row.push(order[i]);
+                row.push(positions[i]);
                 i++;
             }
-            self.position.push(row);
+            self.board.push(row);
         }
 
         self.update();
     }
 
     self.shuffle = function(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let x = a[i];
+            a[i] = a[j];
+            a[j] = x;
+        }
+
         return a;
     }
 
-    self.getMousePos = function (canvas, evt) {
-   
-     var rect = canvas.getBoundingClientRect();
-        return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+    self.getPosition = function(i) {
+        for (let y=0; y<self.n; y++) {
+            for (let x=0; x<self.n; x++) {
+                if (self.board[x][y] == i) {
+                    return [x, y];
+                }
+            }
+        }
+
+        return [-1, -1];
+    }
+
+    self.getValue = function(x, y) {
+        return self.board[x][y];
+    }
+
+    self.moveTile = function(i) {
+        let position = self.getPosition(i);
+        let x = position[0];
+        let y = position[1];
+
+        if (y > 0) {
+            let y2 = y - 1; 
+            if (self.getValue(x, y2) == 0) {
+                self.board[x][y2] = self.board[x][y];
+                self.board[x][y] = 0;
+                self.update();
+                return;
+            }
+        }
+       if (y < self.n - 1) {
+            let y2 = y + 1; 
+            if (self.getValue(x, y2) == 0) {
+                self.board[x][y2] = self.board[x][y];
+                self.board[x][y] = 0;
+                self.update();
+                return;
+            }
+        } 
+        if (x > 0) {
+            let x2 = x - 1; 
+            if (self.getValue(x2, y) == 0) {
+                self.board[x2][y] = self.board[x][y];
+                self.board[x][y] = 0;
+                self.update();
+                return;
+            }
+        }
+        if (x < self.n - 1) {
+            let x2 = x + 1; 
+            if (self.getValue(x2, y) == 0) {
+                self.board[x2][y] = self.board[x][y];
+                self.board[x][y] = 0;
+                self.update();
+                return;
+            }
+        }
     }
 
     self.update = function() {
@@ -62,7 +130,7 @@ GUI = function () {
 
            for (let y=0; y<self.n; y++) {
 
-               if (self.position[x][y] == 0) { 
+               if (self.board[x][y] == 0) { 
                    continue; 
                }
 
@@ -72,7 +140,7 @@ GUI = function () {
                self.ctx.rect((100*x)+x+1, (100*y)+y+1, 100, 100);
                self.ctx.fill();
                self.ctx.fillStyle = "black";
-               self.ctx.fillText(self.position[x][y], 100*x + 50, 100*y + 50);
+               self.ctx.fillText(self.board[x][y], 100*x + 50, 100*y + 50);
                self.ctx.lineWidth = 1;
                self.ctx.stroke();
  
