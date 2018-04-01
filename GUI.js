@@ -5,13 +5,36 @@ GUI = function () {
     self.ctx = document.getElementById("canvas-game").getContext("2d"); 
     self.ctx.font = '14px Arial';
 
-    self.n = 5;
+    self.size = 3;
+    self.minSize = 3;
+    self.maxSize = 6;
+
+    self.mode="Manual";
+
+    self.AI = AI();
+
     self.board = [];
 
+    self.setSize = function(size) {
+        self.size = size;
+        if (self.size > self.maxSize) {
+            self.size = self.maxSize;  
+        } else if (self.size < self.minSize) {
+            self.size = self.minSize;
+        }
+        self.start();
+    }
+
+    self.setMode = function(mode) {
+        self.mode = mode;
+    }
+
     self.onClick = function(e) {
-        let x = Math.floor(e.clientX / 100);
-        let y = Math.floor(e.clientY / 100);
-        self.moveTile(self.getValue(x, y));
+        if (self.mode == "Manual") {
+            let x = Math.floor((e.clientX - 1) / 101);
+            let y = Math.floor((e.clientY - 1) / 101);
+            self.moveTile([x, y]);
+        }
     }
 
     document.getElementById("canvas-game").addEventListener("click", self.onClick, false);
@@ -19,23 +42,24 @@ GUI = function () {
     self.start = function() {
 
         let positions = [];
-        for (let j=self.n*self.n - 1; j>=0; j--) {
+        for (let j=self.size*self.size - 1; j>=0; j--) {
             positions.push(j);
         }
 
         positions = self.shuffle(positions);
+        self.board = [];
 
         let i = 0;
-        for (let y=0; y<self.n; y++) {
+        for (let y=0; y<self.size; y++) {
             let row = [];
-            for (let x=0; x<self.n; x++) {
+            for (let x=0; x<self.size; x++) {
                 row.push(positions[i]);
                 i++;
             }
             self.board.push(row);
         }
 
-        self.update();
+        self.draw();
     }
 
     self.shuffle = function(a) {
@@ -50,8 +74,8 @@ GUI = function () {
     }
 
     self.getPosition = function(i) {
-        for (let y=0; y<self.n; y++) {
-            for (let x=0; x<self.n; x++) {
+        for (let y=0; y<self.size; y++) {
+            for (let x=0; x<self.size; x++) {
                 if (self.board[x][y] == i) {
                     return [x, y];
                 }
@@ -65,77 +89,68 @@ GUI = function () {
         return self.board[x][y];
     }
 
-    self.moveTile = function(i) {
-        let position = self.getPosition(i);
-        let x = position[0];
-        let y = position[1];
+    self.isValidPosition = function(x, y) {
+        if (y >= 0 && y < self.size && x >= 0 && x < self.size) {
+            return true;
+        }
+        return false;
+    }
 
-        if (y > 0) {
-            let y2 = y - 1; 
-            if (self.getValue(x, y2) == 0) {
-                self.board[x][y2] = self.board[x][y];
-                self.board[x][y] = 0;
-                self.update();
-                return;
-            }
+    self.moveTile = function(tile) {
+        let x = tile[0];
+        let y = tile[1];
+
+        if (self.isValidPosition(x, y-1) && self.getValue(x, y-1) == 0) {
+            self.board[x][y-1] = self.board[x][y];
+            self.board[x][y] = 0;
+            self.draw();
+            return;
         }
-       if (y < self.n - 1) {
-            let y2 = y + 1; 
-            if (self.getValue(x, y2) == 0) {
-                self.board[x][y2] = self.board[x][y];
-                self.board[x][y] = 0;
-                self.update();
-                return;
-            }
-        } 
-        if (x > 0) {
-            let x2 = x - 1; 
-            if (self.getValue(x2, y) == 0) {
-                self.board[x2][y] = self.board[x][y];
-                self.board[x][y] = 0;
-                self.update();
-                return;
-            }
+
+        if (self.isValidPosition(x, y+1) && self.getValue(x, y+1) == 0) {
+            self.board[x][y+1] = self.board[x][y];
+            self.board[x][y] = 0;
+            self.draw();
+            return;
         }
-        if (x < self.n - 1) {
-            let x2 = x + 1; 
-            if (self.getValue(x2, y) == 0) {
-                self.board[x2][y] = self.board[x][y];
-                self.board[x][y] = 0;
-                self.update();
-                return;
-            }
+        if (self.isValidPosition(x-1, y) && self.getValue(x-1, y) == 0) {
+            self.board[x-1][y] = self.board[x][y];
+            self.board[x][y] = 0;
+            self.draw();
+            return;
+        }
+        if (self.isValidPosition(x+1, y) && self.getValue(x+1, y) == 0) {
+            self.board[x+1][y] = self.board[x][y];
+            self.board[x][y] = 0;
+            self.draw();
+            return;
         }
     }
 
     self.update = function() {
-
-        self.draw();
+        if (self.mode == "AI") {
+            let tile = self.AI.update(self);
+            self.moveTile(tile);
+        }
     }
 
     self.draw = function () {
 
-        // clear the foreground to white
-        self.ctx.clearRect(0, 0, self.n*100 + self.n, self.n*100+self.n);
-        
-        self.ctx.fillStyle = "lightgray";
-        //self.ctx.strokeStyle = "black";
-        self.ctx.beginPath();
-        self.ctx.rect(0, 0, self.n*100 + self.n, self.n*100+self.n);
-        self.ctx.fill();
-        //self.ctx.lineWidth = 0;
-        //self.ctx.stroke();
+        self.ctx.clearRect(0, 0, self.maxSize*100 + self.maxSize + 1, self.maxSize*100+self.maxSize + 1);
+        self.ctx.fillStyle = "#d9ad7c";
+        let length = self.size*100 + self.size + 1;
+        self.ctx.fillRect(0, 0, length, length);
 
-        for (let x=0; x<self.n; x++) {
+        for (let x=0; x<self.size; x++) {
 
-           for (let y=0; y<self.n; y++) {
+           for (let y=0; y<self.size; y++) {
 
                if (self.board[x][y] == 0) { 
                    continue; 
                }
 
-               self.ctx.fillStyle = "gray";
-               self.ctx.strokeStyle = "black";
+               self.ctx.fillStyle = "#a2836e";
+               self.ctx.strokeStyle = "#674d3c";
                self.ctx.beginPath();
                self.ctx.rect((100*x)+x+1, (100*y)+y+1, 100, 100);
                self.ctx.fill();

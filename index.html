@@ -1,6 +1,7 @@
 <html>
 
 <script type="text/javascript" src="GUI.js"></script>
+<script type="text/javascript" src="AI.js"></script>
 
 <head>
     <title>Sliding Puzzle</title>
@@ -15,20 +16,56 @@
         user-select: none;  
     }
 
+    #canvas-game {
+        float:left;
+    }
+
+    #side {
+        float:left;
+    }
+
     </style>
 </head>
 
+<body>
+
+<div id="main">
+
+  <canvas id="canvas-game" width="607" height="607"></canvas>
+
+  <div id="side">
+    <label> Select Size : </label>
+    <select id="select-size" onchange="setSize()">
+      <option value=3 selected>3</option>
+      <option value=4>4</option>
+      <option value=5>5</option>
+      <option value=6>6</option>
+    </select>
+    <br />
+    <label> Select Mode : </label>
+    <select id="select-mode" onchange="setMode()">
+      <option value="Manual" selected>Manual</option>
+      <option value="AI">AI</option>
+    </select>
+  </div>
+  </div>
+</body>
+
 <script>
-init = function() {
-    
-    var gui = GUI();
-    
+
+var gui = GUI();
+
+setInterval(update, 1000 / 10);
+function update() {
+    gui.update();
+}
+
+setSize = function() {
+    gui.setSize(parseInt(document.getElementById("select-size").value));
+}
+
+setMode = function() {
+    gui.setMode(document.getElementById("select-mode").value);
 }
 </script>
-
-<body onload="init()">
-
-<canvas id="canvas-game" width="800" height="600"></canvas>
-
-</body>
 </html>
