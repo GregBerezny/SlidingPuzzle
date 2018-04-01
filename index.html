@@ -7,15 +7,6 @@
     <title>Sliding Puzzle</title>
     <style>
 
-    body, html{     
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;  
-    }
-
     #canvas-game {
         float:left;
     }
@@ -36,24 +27,28 @@
   <div id="side">
     <label> Select Size : </label>
     <select id="select-size" onchange="setSize()">
-      <option value=3 selected>3</option>
-      <option value=4>4</option>
-      <option value=5>5</option>
-      <option value=6>6</option>
     </select>
+
     <br />
+
     <label> Select Mode : </label>
     <select id="select-mode" onchange="setMode()">
       <option value="Manual" selected>Manual</option>
       <option value="AI">AI</option>
     </select>
   </div>
-  </div>
+
+</div>
 </body>
 
 <script>
 
 var gui = GUI();
+
+document.getElementById("select-size").innerHTML = "<option value="+gui.minSize+" selected>"+gui.minSize+"x"+gui.minSize+"</option>";
+for (let i=gui.minSize+1; i<=gui.maxSize; i++) {
+    document.getElementById("select-size").innerHTML += "<option value="+i+">"+i+"x"+i+"</option>";
+}
 
 setInterval(update, 1000 / 10);
 function update() {

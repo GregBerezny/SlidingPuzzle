@@ -3,11 +3,11 @@ GUI = function () {
     var self = {};
 
     self.ctx = document.getElementById("canvas-game").getContext("2d"); 
-    self.ctx.font = '14px Arial';
+    self.ctx.font = 'bold 32px Arial';
 
-    self.size = 3;
     self.minSize = 3;
     self.maxSize = 6;
+    self.size = self.minSize;
 
     self.mode="Manual";
 
@@ -137,25 +137,31 @@ GUI = function () {
     self.draw = function () {
 
         self.ctx.clearRect(0, 0, self.maxSize*100 + self.maxSize + 1, self.maxSize*100+self.maxSize + 1);
-        self.ctx.fillStyle = "#d9ad7c";
+        self.ctx.fillStyle = "#9A7A49";
         let length = self.size*100 + self.size + 1;
         self.ctx.fillRect(0, 0, length, length);
+
+
 
         for (let x=0; x<self.size; x++) {
 
            for (let y=0; y<self.size; y++) {
 
                if (self.board[x][y] == 0) { 
+                   self.ctx.rect((100*x)+x+1, (100*y)+y+1, 100, 100);
+          self.ctx.lineWidth = 1;
+               self.ctx.stroke();
                    continue; 
                }
 
-               self.ctx.fillStyle = "#a2836e";
-               self.ctx.strokeStyle = "#674d3c";
+        self.ctx.fillStyle = "#FFFFFF";
+        self.ctx.strokeStyle = "#0E0E0E";
+
                self.ctx.beginPath();
                self.ctx.rect((100*x)+x+1, (100*y)+y+1, 100, 100);
                self.ctx.fill();
-               self.ctx.fillStyle = "black";
-               self.ctx.fillText(self.board[x][y], 100*x + 50, 100*y + 50);
+               self.ctx.fillStyle = "#6B0000";
+               self.ctx.fillText(self.board[x][y], 100*x+42, 100*y + 60);
                self.ctx.lineWidth = 1;
                self.ctx.stroke();
  
