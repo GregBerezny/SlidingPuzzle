@@ -86,40 +86,43 @@ GUI = function () {
     }
 
     self.getValue = function(x, y) {
+        if (self.isOOB(x, y)) {
+            return -1;
+        }
         return self.board[x][y];
     }
 
-    self.isValidPosition = function(x, y) {
+    self.isOOB = function(x, y) {
         if (y >= 0 && y < self.size && x >= 0 && x < self.size) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     self.moveTile = function(tile) {
         let x = tile[0];
         let y = tile[1];
 
-        if (self.isValidPosition(x, y-1) && self.getValue(x, y-1) == 0) {
+        if (!self.isOOB(x, y-1) && self.getValue(x, y-1) == 0) {
             self.board[x][y-1] = self.board[x][y];
             self.board[x][y] = 0;
             self.draw();
             return;
         }
 
-        if (self.isValidPosition(x, y+1) && self.getValue(x, y+1) == 0) {
+        if (!self.isOOB(x, y+1) && self.getValue(x, y+1) == 0) {
             self.board[x][y+1] = self.board[x][y];
             self.board[x][y] = 0;
             self.draw();
             return;
         }
-        if (self.isValidPosition(x-1, y) && self.getValue(x-1, y) == 0) {
+        if (!self.isOOB(x-1, y) && self.getValue(x-1, y) == 0) {
             self.board[x-1][y] = self.board[x][y];
             self.board[x][y] = 0;
             self.draw();
             return;
         }
-        if (self.isValidPosition(x+1, y) && self.getValue(x+1, y) == 0) {
+        if (!self.isOOB(x+1, y) && self.getValue(x+1, y) == 0) {
             self.board[x+1][y] = self.board[x][y];
             self.board[x][y] = 0;
             self.draw();
