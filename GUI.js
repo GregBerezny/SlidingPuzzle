@@ -152,13 +152,13 @@ GUI = function () {
 
                if (self.board[x][y] == 0) { 
                    self.ctx.rect((100*x)+x+1, (100*y)+y+1, 100, 100);
-          self.ctx.lineWidth = 1;
-               self.ctx.stroke();
+                   self.ctx.lineWidth = 1;
+                   self.ctx.stroke();
                    continue; 
                }
 
-        self.ctx.fillStyle = "#FFFFFF";
-        self.ctx.strokeStyle = "#0E0E0E";
+               self.ctx.fillStyle = "#FFFFFF";
+               self.ctx.strokeStyle = "#0E0E0E";
 
                self.ctx.beginPath();
                self.ctx.rect((100*x)+x+1, (100*y)+y+1, 100, 100);
