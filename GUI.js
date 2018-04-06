@@ -11,7 +11,7 @@ GUI = function () {
 
     self.mode="Manual";
 
-    self.AI = AI();
+    self.AI = AI(self);
 
     self.board = [];
 
@@ -132,7 +132,7 @@ GUI = function () {
 
     self.update = function() {
         if (self.mode == "AI") {
-            let tile = self.AI.update(self);
+            let tile = self.AI.getNextAction();
             self.moveTile(tile);
         }
     }

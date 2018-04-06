@@ -1,9 +1,16 @@
-AI = function () {
-
+AI = function (grid) {
     var self = {};
 
-    self.update = function(gui) {
-        let emptySpace = gui.getPosition(0);
+    self.grid = grid;
+
+    self.getNextAction = function() {
+        let actions = self.getAvailableActions();
+        let rand = Math.floor(Math.random() * actions.length);
+        return actions[rand];
+    }
+
+    self.getAvailableActions = function() {
+        let emptySpace = self.grid.getPosition(0);
         let x = emptySpace[0];
         let y = emptySpace[1];
 
@@ -21,9 +28,7 @@ AI = function () {
             actions.push([x, y-1]);
         }
 
-        let rand = Math.floor(Math.random() * actions.length);
-
-        return actions[rand];
+        return actions;
     }
 
     return self;
