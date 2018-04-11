@@ -5,13 +5,14 @@ AI = function (grid) {
     self.actions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
     self.getNextAction = function() {
-        let actions = self.getLegalActions(self.grid);
+        let actions = self.getLegalActions(self.grid.board);
         let rand = Math.floor(Math.random() * actions.length);
+
         return actions[rand];
     }
 
     self.getLegalActions = function(state) {
-        let emptySpace = state.getPosition(0);
+        let emptySpace = self.getPosition(state, 0);
         let x = emptySpace[0];
         let y = emptySpace[1];
 
@@ -29,10 +30,53 @@ AI = function (grid) {
         return availableActions;
     }
 
+    self.getPosition = function(state, i) {
+        for (let y = 0; y < state.length; y++) {
+            for (let x = 0; x < state.length; x++) {
+                if (state[x][y] == i) {
+                    return [x, y];
+                }
+            }
+        }
+
+        return [-1, -1];
+    }
+
+    self.getNextState = function(state, action) {
+        let x = action[0];
+        let y = action[1];
+
+        let nextState = [];
+        for (var i = 0; i < state.length; i++) {
+            var arr = [];
+            for (var j = 0; j < state.length; j++) {
+                arr.push(state[i][j]);
+            }
+            nextState.push(arr);
+        }
+
+        let emptySpace = self.getPosition(state, 0);
+        let ex = emptySpace[0];
+        let ey = emptySpace[1];
+
+        nextState[ex][ey] = nextState[x][y];
+        nextState[x][y] = 0;
+
+        return nextState;
+    }
+
+    self.createChild = function(parent, action, cost) {
+        var nextState = self.getNextState(parent.state, action);
+        var g = cost + node.g;
+        var h = self.estimateCost(nextState);
+        var child = new Node(nextState, parent, action, g, h);
+        return child;
+    }
+
     return self;
 }
 
-Node = function (board, parent, action, g, h) {
+Node = function (state, parent, action, g, h) {
     var self = {};
     self.state = state;
     self.action = action;
