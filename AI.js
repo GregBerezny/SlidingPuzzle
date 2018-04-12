@@ -30,6 +30,17 @@ AI = function (grid) {
         return availableActions;
     }
 
+    self.isGoal = function(state, i) {
+        for (let i = 0; i < self.grid.size; i++) {
+            for (let j = 0; j < self.grid.size; j++) {
+                if (state[i][j] != self.grid.goal[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     self.getPosition = function(state, i) {
         for (let y = 0; y < state.length; y++) {
             for (let x = 0; x < state.length; x++) {
