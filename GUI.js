@@ -11,7 +11,10 @@ GUI = function () {
 
     self.mode="Manual";
 
-    self.AI = AI(self);
+    self.config = {};
+    self.config.heuristic = 'mdist';
+
+    self.AI = AI(self, self.config);
 
     self.board = [];
     self.goal = [];

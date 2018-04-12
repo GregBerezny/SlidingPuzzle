@@ -1,7 +1,8 @@
-AI = function (grid) {
+AI = function (grid, config) {
     var self = {};
 
     self.grid = grid;
+    self.config = config;
     self.actions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
     self.getNextAction = function() {
@@ -76,9 +77,49 @@ AI = function (grid) {
         return nextState;
     }
 
-    self.createChild = function(parent, action, cost) {
+    self.computeHammingDistance = function(state) {
+        let misplacedTiles = 0;
+        for (let i = 0; i < self.grid.size; i++) {
+            for (let j = 0; j < self.grid.size; j++) {
+                if (state[i][j] != 0 && state[i][j] != self.grid.goal[i][j]) {
+                    misplacedTiles++;
+                }
+            }
+        }
+
+        return misplacedTiles;
+    }
+
+    self.computeManhattanDistance = function(state) {
+        let manhattan = 0;
+        for (let i = 0; i < self.grid.size; i++) {
+            for (let j = 0; j < self.grid.size; j++) {
+                if (state[i][j] != 0) {
+                    let val = self.getPosition(self.grid.goal, state[i][j]);
+                    let gx = val[0];
+                    let gy = val[1];
+                    let dx = Math.abs(i - gx);
+                    let dy = Math.abs(j - gy);
+                    manhattan += (dx + dy);
+                }
+            }
+        }
+
+        return manhattan;
+    }
+
+    self.estimateCost = function(state) {
+        if (self.config.heuristic == 'hdist') {
+            return self.computeHammingDistance(state);
+        }
+        else if (self.config.heuristic == 'mdist') {
+            return self.computeManhattanDistance(state);
+        }
+    }
+
+    self.createChild = function(parent, action) {
         var nextState = self.getNextState(parent.state, action);
-        var g = cost + node.g;
+        var g = parent.g + 1;
         var h = self.estimateCost(nextState);
         var child = new Node(nextState, parent, action, g, h);
         return child;
