@@ -14,6 +14,7 @@ GUI = function () {
     self.AI = AI(self);
 
     self.board = [];
+    self.goal = [];
 
     self.setSize = function(size) {
         self.size = size;
@@ -42,21 +43,34 @@ GUI = function () {
     self.start = function() {
 
         let positions = [];
-        for (let j=self.size*self.size - 1; j>=0; j--) {
+        for (let j = 1; j < self.size * self.size; j++) {
             positions.push(j);
+        }
+        positions.push(0);
+
+        for (let i = 0; i < self.size; i++) {
+            self.goal.push(new Array(self.size));
+        }
+
+        let k = 0;
+        for (let i = 0; i < self.size; i++) {
+            for (let j = 0; j < self.size; j++) {
+                self.goal[j][i] = positions[k];
+                k++;
+            }
         }
 
         positions = self.shuffle(positions);
-        self.board = [];
+        for (let i = 0; i < self.size; i++) {
+            self.board.push(new Array(self.size));
+        }
 
         let i = 0;
-        for (let y=0; y<self.size; y++) {
-            let row = [];
-            for (let x=0; x<self.size; x++) {
-                row.push(positions[i]);
+        for (let y = 0; y < self.size; y++) {
+            for (let x = 0; x < self.size; x++) {
+                self.board[x][y] = positions[i];
                 i++;
             }
-            self.board.push(row);
         }
 
         self.draw();
