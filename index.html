@@ -14,8 +14,26 @@
 
     #side {
         float:left;
+        margin-left: 50px;
     }
 
+    #select-h, #select-size, #select-mode{
+        margin-top: 5px;
+        margin-bottom: 5px;
+        height: 25px;
+        width: 200px;
+    }
+
+    label {
+        width: 125px;
+        display: inline-block;
+    }
+
+    #solve-button {
+        height: 25px;
+        margin: 10px 0;
+        width: 75px;
+    }
     </style>
 </head>
 
@@ -26,23 +44,28 @@
   <canvas id="canvas-game" width="607" height="607"></canvas>
 
   <div id="side">
-    <label> Select Size : </label>
+    <label>Select Size: </label>
     <select id="select-size" onchange="setSize()">
     </select>
 
-    <br />
+    <br/>
 
-    <label> Select Mode : </label>
+    <label>Select Mode: </label>
     <select id="select-mode" onchange="setMode()">
       <option value="Manual" selected>Manual</option>
       <option value="AI">AI</option>
     </select>
 
+    <br/>
+
+    <label>Select Heuristic: </label>
     <select id="select-h" onchange="setHeuristic()">
       <option value="zero" selected>Zero</option>
       <option value="mdist">Manhattan</option>
       <option value="hdist">Misplaced tiles</option>
     </select>
+
+    <br/>
 
     <button id="solve-button" onclick="solve()">Solve</button>
   </div>
