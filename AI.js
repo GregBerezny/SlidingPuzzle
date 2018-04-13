@@ -4,12 +4,41 @@ AI = function (grid, config) {
     self.grid = grid;
     self.config = config;
     self.actions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+    self.startState = null;
+    self.inProgress = false;
+    self.path = [];
+    self.open = [];
+    self.isInOpen = {};
+    self.closed = [];
 
     self.getNextAction = function() {
         let actions = self.getLegalActions(self.grid.board);
         let rand = Math.floor(Math.random() * actions.length);
 
         return actions[rand];
+    }
+
+    self.startSearch = function(startState) {
+        self.inProgress = true;
+        self.startState = startState;
+        self.path = [];
+
+        self.closed = [];
+        self.isInOpen = {};
+
+        var startNode = new Node(startState, null, [-1, -1], 0, 0);
+        var f = function(node) { return node.g + node.h; }
+        self.open = new BinaryHeap(f);
+        self.addToOpen(startNode);
+    }
+
+    self.addToOpen = function(node) {
+        self.open.push(node);
+        let arrString = node.state.toString();
+        if (!self.isInOpen.hasOwnProperty(arrString)) {
+            self.isInOpen[arrString] = 0;
+        }
+        self.isInOpen[arrString]++;
     }
 
     self.getLegalActions = function(state) {
