@@ -11,11 +11,11 @@ AI = function (grid, config) {
     self.isInOpen = {};
     self.closed = [];
 
-    self.getNextAction = function() {
-        let actions = self.getLegalActions(self.grid.board);
-        let rand = Math.floor(Math.random() * actions.length);
-
-        return actions[rand];
+    self.solve = function() {
+        self.startSearch(self.grid.board);
+        while (self.inProgress) {
+            self.searchIteration();
+        }
     }
 
     self.startSearch = function(startState) {
@@ -32,6 +32,36 @@ AI = function (grid, config) {
         self.addToOpen(startNode);
     }
 
+    self.searchIteration = function() {
+        if (!self.inProgress) { return; }
+
+        let node = self.open.pop();
+        self.removeFromOpen(node);
+
+        if (self.isGoal(node.state)) {
+            self.path = self.constructPath(node);
+            self.inProgress = false;
+            return;
+        }
+
+        let nodeString = node.state.toString();
+
+        if (self.closed.includes(nodeString)) {
+            return;
+        }
+
+        self.closed.push(nodeString);
+
+        let children = self.expand(node);
+
+        children.forEach(function(child) {
+            if (self.inOpenWithBetterG(child)) {
+                return;
+            }
+            self.addToOpen(child);
+        });
+    }
+
     self.addToOpen = function(node) {
         self.open.push(node);
         let arrString = node.state.toString();
@@ -39,6 +69,38 @@ AI = function (grid, config) {
             self.isInOpen[arrString] = 0;
         }
         self.isInOpen[arrString]++;
+    }
+
+    self.removeFromOpen = function(node) {
+        self.isInOpen[node.state.toString()]--;
+    }
+
+    self.inOpenWithBetterG = function(child) {
+        let arrString = child.state.toString();
+        if (!self.isInOpen.hasOwnProperty(arrString)) {
+            return false;
+        }
+
+        if (self.isInOpen[arrString] <= 0) {
+            return false;
+        }
+
+        self.open.content.forEach(function(node) {
+            if (node.state.toString() == arrString && node.g <= child.g) {
+                return true;
+            }
+        });
+
+        return false;
+    }
+
+    self.constructPath = function(node) {
+        var path = [];
+        while (node.parent != null) {
+            path.unshift(node.action);
+            node = node.parent;
+        }
+        return path;
     }
 
     self.getLegalActions = function(state) {
@@ -60,7 +122,7 @@ AI = function (grid, config) {
         return availableActions;
     }
 
-    self.isGoal = function(state, i) {
+    self.isGoal = function(state) {
         for (let i = 0; i < self.grid.size; i++) {
             for (let j = 0; j < self.grid.size; j++) {
                 if (state[i][j] != self.grid.goal[i][j]) {
