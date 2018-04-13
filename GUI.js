@@ -12,9 +12,8 @@ GUI = function () {
     self.mode="Manual";
 
     self.config = {};
-    self.config.heuristic = 'mdist';
 
-    self.AI = AI(self, self.config);
+    self.AI = null;
 
     self.board = [];
     self.goal = [];
@@ -29,8 +28,23 @@ GUI = function () {
         self.start();
     }
 
+    self.solve = function() {
+        if (self.mode == "AI") {
+            self.AI = new AI(self, self.config);
+            self.AI.solve();
+
+            for (let i = 0; i < self.AI.path.length; i++) {
+                self.moveTile(self.AI.path[i]);
+            }
+        }
+    }
+
     self.setMode = function(mode) {
         self.mode = mode;
+    }
+
+    self.setHeuristic = function(h) {
+        self.config.heuristic = h;
     }
 
     self.onClick = function(e) {
@@ -44,7 +58,6 @@ GUI = function () {
     document.getElementById("canvas-game").addEventListener("click", self.onClick, false);
 
     self.start = function() {
-
         let positions = [];
         for (let j = 1; j < self.size * self.size; j++) {
             positions.push(j);
@@ -144,13 +157,6 @@ GUI = function () {
             self.board[x][y] = 0;
             self.draw();
             return;
-        }
-    }
-
-    self.update = function() {
-        if (self.mode == "AI") {
-            let tile = self.AI.getNextAction();
-            self.moveTile(tile);
         }
     }
 

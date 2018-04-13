@@ -37,6 +37,14 @@
       <option value="Manual" selected>Manual</option>
       <option value="AI">AI</option>
     </select>
+
+    <select id="select-h" onchange="setHeuristic()">
+      <option value="zero" selected>Zero</option>
+      <option value="mdist">Manhattan</option>
+      <option value="hdist">Misplaced tiles</option>
+    </select>
+
+    <button id="solve-button" onclick="solve()">Solve</button>
   </div>
 
 </div>
@@ -51,17 +59,20 @@ for (let i=gui.minSize+1; i<=gui.maxSize; i++) {
     document.getElementById("select-size").innerHTML += "<option value="+i+">"+i+"x"+i+"</option>";
 }
 
-setInterval(update, 1000 / 10);
-function update() {
-    gui.update();
-}
-
 setSize = function() {
     gui.setSize(parseInt(document.getElementById("select-size").value));
 }
 
+setHeuristic = function() {
+    gui.setHeuristic(document.getElementById("select-h").value);
+}
+
 setMode = function() {
     gui.setMode(document.getElementById("select-mode").value);
+}
+
+solve = function() {
+    gui.solve();
 }
 </script>
 </html>
