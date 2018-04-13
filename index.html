@@ -34,6 +34,9 @@
         margin: 10px 0;
         width: 75px;
     }
+
+    #AI-Options { visibility: hidden; }
+
     </style>
 </head>
 
@@ -58,6 +61,7 @@
 
     <br/>
 
+    <div id="AI-Options">
     <label>Select Heuristic: </label>
     <select id="select-h" onchange="setHeuristic()">
       <option value="zero" selected>Zero</option>
@@ -68,6 +72,7 @@
     <br/>
 
     <button id="solve-button" onclick="solve()">Solve</button>
+    </div>
   </div>
 
 </div>
@@ -91,7 +96,14 @@ setHeuristic = function() {
 }
 
 setMode = function() {
-    gui.setMode(document.getElementById("select-mode").value);
+    var mode = document.getElementById("select-mode").value
+    gui.setMode();
+    if (mode == "AI") {
+        document.getElementById("AI-Options").style.visibility = "visible";
+    }
+    else {
+        document.getElementById("AI-Options").style.visibility = "hidden";
+    }
 }
 
 solve = function() {
