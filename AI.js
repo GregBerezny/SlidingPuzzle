@@ -206,6 +206,9 @@ AI = function (grid, config) {
         else if (self.config.heuristic == 'mdist') {
             return self.computeManhattanDistance(state);
         }
+        else if (self.config.heuristic == 'zero') {
+            return 0;
+        }
     }
 
     self.expand = function(node) {
