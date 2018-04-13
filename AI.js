@@ -117,6 +117,16 @@ AI = function (grid, config) {
         }
     }
 
+    self.expand = function(node) {
+        let children = [];
+        let actions = self.getLegalActions(node.state);
+
+        for (let i = 0; i < actions.length; i++) {
+            children.push(self.createChild(node, actions[i]));
+        }
+        return children;
+    }
+
     self.createChild = function(parent, action) {
         var nextState = self.getNextState(parent.state, action);
         var g = parent.g + 1;
