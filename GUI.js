@@ -12,6 +12,8 @@ GUI = function () {
     self.mode="Manual";
 
     self.config = {};
+    self.shuffleLength = 5;
+    self.actions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 
     self.AI = null;
 
@@ -26,6 +28,25 @@ GUI = function () {
             self.size = self.minSize;
         }
         self.start();
+    }
+
+    self.getLegalActions = function() {
+        let emptySpace = self.getPosition(0);
+        let x = emptySpace[0];
+        let y = emptySpace[1];
+
+        let availableActions = [];
+
+        for (var i = 0; i < self.actions.length; i++) {
+            let nx = x + self.actions[i][0];
+            let ny = y + self.actions[i][1];
+
+            if (!self.isOOB(nx, ny)) {
+                availableActions.push([nx, ny]);
+            }
+        }
+
+        return availableActions;
     }
 
     self.solve = function() {
@@ -45,6 +66,10 @@ GUI = function () {
 
     self.setHeuristic = function(h) {
         self.config.heuristic = h;
+    }
+
+    self.setShuffleLength = function(length) {
+        self.shuffleLength = length;
     }
 
     self.onClick = function(e) {
@@ -76,7 +101,6 @@ GUI = function () {
             }
         }
 
-        positions = self.shuffle(positions);
         for (let i = 0; i < self.size; i++) {
             self.board.push(new Array(self.size));
         }
@@ -92,15 +116,12 @@ GUI = function () {
         self.draw();
     }
 
-    self.shuffle = function(a) {
-        for (let i = a.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            let x = a[i];
-            a[i] = a[j];
-            a[j] = x;
+    self.shuffle = function() {
+        for (let i = 0; i < self.shuffleLength; i++) {
+            let actions = self.getLegalActions();
+            let rand = Math.floor(Math.random() * actions.length);
+            self.moveTile(actions[rand]);
         }
-
-        return a;
     }
 
     self.getPosition = function(i) {

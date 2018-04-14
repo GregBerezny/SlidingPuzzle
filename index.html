@@ -17,22 +17,30 @@
         margin-left: 50px;
     }
 
-    #select-h, #select-size, #select-mode{
+    #select-h, #select-size,
+    #select-mode, #select-shuffle {
         margin-top: 5px;
         margin-bottom: 5px;
         height: 25px;
         width: 200px;
     }
 
+    #select-shuffle { width: 100px; }
+
     label {
         width: 125px;
         display: inline-block;
     }
 
-    #solve-button {
+    #solve-button, #shuffle-button {
         height: 25px;
         margin: 10px 0;
         width: 75px;
+    }
+
+    #shuffle-button {
+        width: 95px;
+        margin: 5px 0;
     }
 
     #AI-Options { visibility: hidden; }
@@ -47,17 +55,31 @@
   <canvas id="canvas-game" width="607" height="607"></canvas>
 
   <div id="side">
-    <label>Select Size: </label>
+    <label>Size (n): </label>
     <select id="select-size" onchange="setSize()">
     </select>
 
     <br/>
 
-    <label>Select Mode: </label>
+    <label>Mode: </label>
     <select id="select-mode" onchange="setMode()">
       <option value="Manual" selected>Manual</option>
       <option value="AI">AI</option>
     </select>
+
+    <br/>
+
+    <label>Shuffle Length: </label>
+    <select id="select-shuffle" onchange="setShuffleLength()">
+      <option selected>5</option>
+      <option>10</option>
+      <option>15</option>
+      <option>20</option>
+      <option>30</option>
+      <option>40</option>
+      <option>50</option>
+    </select>
+    <button id="shuffle-button" onclick="shuffle()">Shuffle</button>
 
     <br/>
 
@@ -72,6 +94,7 @@
     <br/>
 
     <button id="solve-button" onclick="solve()">Solve</button>
+
     </div>
   </div>
 
@@ -95,9 +118,13 @@ setHeuristic = function() {
     gui.setHeuristic(document.getElementById("select-h").value);
 }
 
+setShuffleLength = function() {
+    gui.setShuffleLength(parseInt(document.getElementById("select-shuffle").value));
+}
+
 setMode = function() {
     var mode = document.getElementById("select-mode").value
-    gui.setMode();
+    gui.setMode(mode);
     if (mode == "AI") {
         document.getElementById("AI-Options").style.visibility = "visible";
     }
@@ -108,6 +135,10 @@ setMode = function() {
 
 solve = function() {
     gui.solve();
+}
+
+shuffle = function() {
+    gui.shuffle();
 }
 </script>
 </html>
