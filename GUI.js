@@ -16,6 +16,7 @@ GUI = function () {
     self.actions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
     self.iterations = 0;
     self.pathLength = 0;
+    self.pathTime = 0;
 
     self.AI = null;
 
@@ -54,7 +55,10 @@ GUI = function () {
     self.solve = function() {
         if (self.mode == "AI") {
             self.AI = new AI(self, self.config);
+            let startTime = performance.now();
             self.AI.solve();
+            let endTime = performance.now();
+            self.pathTime = Math.round(endTime - startTime);
             self.iterations = self.AI.iterations;
             self.pathLength = self.AI.path.length;
 

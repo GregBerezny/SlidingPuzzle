@@ -100,7 +100,7 @@
 
     <strong>Iterations: </strong> <label id='iterations-label'></label><br/>
     <strong>Path length: </strong> <label id='path-length-label'></label><br/>
-    <strong>Run time: </strong> <label id='run-time-label'></label><br/>
+    <strong>Compute time (ms): </strong> <label id='compute-time-label'></label><br/>
 
     </div>
   </div>
@@ -144,6 +144,7 @@ solve = function() {
     gui.solve();
     document.getElementById("iterations-label").innerHTML = gui.iterations;
     document.getElementById("path-length-label").innerHTML = gui.pathLength;
+    document.getElementById("compute-time-label").innerHTML = gui.pathTime;
 }
 
 shuffle = function() {
