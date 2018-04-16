@@ -10,16 +10,19 @@ AI = function (grid, config) {
     self.open = [];
     self.isInOpen = {};
     self.closed = [];
+    self.iterations = 0;
 
     self.solve = function() {
         self.startSearch(self.grid.board);
         while (self.inProgress) {
             self.searchIteration();
+            self.iterations++;
         }
     }
 
     self.startSearch = function(startState) {
         self.inProgress = true;
+        self.iterations = 0;
         self.startState = startState;
         self.path = [];
 
