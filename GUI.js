@@ -15,6 +15,7 @@ GUI = function () {
     self.shuffleLength = 5;
     self.actions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
     self.iterations = 0;
+    self.pathLength = 0;
 
     self.AI = null;
 
@@ -55,6 +56,7 @@ GUI = function () {
             self.AI = new AI(self, self.config);
             self.AI.solve();
             self.iterations = self.AI.iterations;
+            self.pathLength = self.AI.path.length;
 
             for (let i = 0; i < self.AI.path.length; i++) {
                 self.moveTile(self.AI.path[i]);
