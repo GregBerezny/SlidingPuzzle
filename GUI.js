@@ -84,7 +84,9 @@ GUI = function () {
         if (self.mode == "Manual") {
             let x = Math.floor((e.clientX - 1) / 101);
             let y = Math.floor((e.clientY - 1) / 101);
-            self.moveTile([x, y]);
+            if (x <= self.size && y < self.size) {
+                self.moveTile([x, y]);
+            }
         }
     }
 
